@@ -23,6 +23,7 @@
     var sizeSelect = document.getElementById('size');
     var scaleInput = document.getElementById('scale');
     var distanceInput = document.getElementById('distance');
+    var currentHeightInput = document.getElementById("currentHeight");
     var letterE = document.getElementById("Letter");
     var sizingWritingE = document.getElementById("sizingWriting");
     var baselineHeight = 100;
@@ -85,7 +86,9 @@
     scaleInput.addEventListener("change", (event) => {
         changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
     });
-    
+    currentHeightInput.addEventListener("change", (event) => { 
+        fixHeight();
+    });
     distanceInput.addEventListener("change", (event) => {
         changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
     });
@@ -170,6 +173,11 @@
             changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
         }
     }
-
+    function fixHeight(){
+        currentHeight = currentHeightInput.value;
+        currentScale = scaleInput.value;
+        scaleInput.value = Math.round( currentScale * heightShouldBeAt / currentHeight *10)/10; //to one decimal place
+        changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
+    }
     createSelection();
     initialize();
