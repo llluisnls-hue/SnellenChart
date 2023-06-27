@@ -95,7 +95,7 @@
         if (touchstartX - touchendX > balancer ) changeLetter();
         if (touchstartX - touchendX < - balancer ) changeLetter();
         if (touchstartY - touchendY > balancer ) decreaseSize();
-        if (touchstartY - touchendY < - balancer ) increaseSize();
+        if (touchstartY - touchendY < -1 * balancer ) increaseSize();
     }
 
     document.addEventListener('touchstart', e => {
