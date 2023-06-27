@@ -1,8 +1,8 @@
     //here is where we will store the height of 1cm
     var viewingWindow = [
         // display name , number of pixels in 1cm
-        ["28' screen", 1297 / 30.5], //height is 146.7mm which is also 844px
-        ["iPhone 14", 844 / 14.67], //height is 146.7mm which is also 844px
+        ["28' screen", 37.2],
+        ["iPhone 14", 50.3 ], 
     ];
 
 
@@ -28,6 +28,7 @@
     var baselineHeight = 100;
     var currentLetter = 1;
     var lenSnellen = SnellenSizes.length;
+    var heightShouldBeAt = 0;
     
     //calculate Snellen's
     // Standard vision able to recognise 1 optotype when subtends angle of 5 minutes of arc
@@ -41,8 +42,8 @@
     function changeCSS(screenSize, distance, SnellenSize){
         console.log(screenSize, distance, SnellenSize);
         height1cm = screenSize;
-        heightShouldBeAt6m = tan5min * SnellenSizes[SnellenSize][1] * 100; //in centimeters
-        letterE.style.fontSize = height1cm * heightShouldBeAt6m * distance / 600 + 'px';
+        heightShouldBeAt = tan5min * SnellenSizes[SnellenSize][1] * 100 * distance / 600; //in centimeters
+        letterE.style.fontSize = height1cm * heightShouldBeAt + 'px';
         sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0];
         saveDefaults();
     }
