@@ -142,13 +142,13 @@
         }
     }
     function initialize(){
-        console.log(decodeURIComponent(document.cookie));
         sizeSelectDef = getCookie("sizeSelectDef",0);
         distanceInputDef = getCookie("distanceInputDef",600);
+        scaleInputDef = getCookie("scaleInputDef",viewingWindow[0][1]);
         document.getElementById('size').value=sizeSelectDef;
         document.getElementById('distance').value=distanceInputDef;
         document.getElementById('scale').value=scaleInputDef;
-        changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
+        changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
     }
     function changeLetter(){
         tempLetter = currentLetter;
