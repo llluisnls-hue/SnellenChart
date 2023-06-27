@@ -2,7 +2,7 @@
     var viewingWindow = [
         // display name , number of pixels in 1cm
         ["28' screen", 79.9],
-        ["iPhone 14", 109.7 ], 
+        ["iPhone 14", 119.7 ], 
     ];
 
 
