@@ -1,7 +1,7 @@
     //here is where we will store the height of 1cm
     var viewingWindow = [
         // display name , number of pixels in 1cm
-        ["28' screen", 37.2],
+        ["28' screen", 79.9],
         ["iPhone 14", 50.3 ], 
     ];
 
@@ -25,6 +25,7 @@
     var distanceInput = document.getElementById('distance');
     var fixButton = document.getElementById('fixMyHeight');
     var currentHeightInput = document.getElementById("currentHeight");
+    var currentHeightInputDiv = document.getElementById("fixHeight");
     var letterE = document.getElementById("Letter");
     var sizingWritingE = document.getElementById("sizingWriting");
     var baselineHeight = 100;
@@ -102,11 +103,11 @@
     });
 
     function showHideFixHeight(){
-        if(currentHeightInput.style.display == "none"){
-            currentHeightInput.style.display="block"
+        if(currentHeightInputDiv.style.display == "none"){
+            currentHeightInputDiv.style.display="block"
         }
             
-        else{currentHeightInput.style.display="none"}
+        else{currentHeightInputDiv.style.display="none"}
     }    
     let touchstartX = 0
     let touchendX = 0
@@ -185,6 +186,7 @@
     }
     function fixHeight(){
         currentHeight = currentHeightInput.value;
+        currentHeightInput.value = "";
         currentScale = scaleInput.value;
         scaleInput.value = Math.round( currentScale * heightShouldBeAt / currentHeight *10)/10; //to one decimal place
         changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
