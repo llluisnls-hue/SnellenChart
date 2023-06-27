@@ -18,7 +18,7 @@
         ["6/4", 4]
     ]
 
-    const letterOptions = ["D","E","F","H","N","P","R","U","V","Z"];
+    const letterOptions = ["D","E","F","H","N","P","R","U","V","Z","O"];
     var fontScale = 1.25 / 7 * 10 ;
 
     var sizeSelect = document.getElementById('size');
@@ -46,6 +46,34 @@
         sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0];
     }
 
+    // basic cookie saving functions from: https://www.w3schools.com/js/js_cookies.asp
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      let expires = "expires="+ d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname, defaultV) {
+      let name = cname + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(';');
+      for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return defaultV;
+    }
+
+    function saveDefaults(){
+        setCookie("sizeSelectDef", sizeSelect.value, 365);
+        setCookie("distanceInputDef", distanceInput.value, 365);
+    }
 
     sizeSelect.addEventListener("change", (event) => {
         changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
@@ -81,20 +109,6 @@
       checkDirection()
     })
 
-    document.addEventListener('swiped-right', function(e){
-        changeLetter();
-    })
-    document.addEventListener('swiped-left', function(e){
-        changeLetter();
-    })
-    document.addEventListener('swiped-down', function(e){
-        decreaseSize();
-    })
-    document.addEventListener('swiped-up', function(e){
-        increaseSize();
-    })
-
-
     function changeWithKey(e){
         console.log(e.code);
         if(e.code == "ArrowLeft" || e.code == "ArrowRight"){
@@ -120,8 +134,10 @@
         }
     }
     function initialize(){
-
-        document.getElementById('size').value=0;
+        sizeSelectDef = getCookie("sizeSelectDef",0);
+        distanceInputDef = getCookie("distanceInputDef",0);
+        document.getElementById('size').value=sizeSelectDef;
+        document.getElementById('distance').value=distanceInputDef;
         changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
     }
     function changeLetter(){
