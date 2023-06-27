@@ -134,8 +134,9 @@
         }
     }
     function initialize(){
+        console.log(decodeURIComponent(document.cookie));
         sizeSelectDef = getCookie("sizeSelectDef",0);
-        distanceInputDef = getCookie("distanceInputDef",0);
+        distanceInputDef = getCookie("distanceInputDef",600);
         document.getElementById('size').value=sizeSelectDef;
         document.getElementById('distance').value=distanceInputDef;
         changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
