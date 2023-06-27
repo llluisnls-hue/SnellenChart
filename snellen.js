@@ -2,7 +2,8 @@
     var viewingWindow = [
         // display name , number of pixels in 1cm
         ["28' screen", 79.9],
-        ["iPhone 14", 119.7 ], 
+        ["iPhone 14", 119.7 ],
+        ["iPad pro 12.9",104.1],
     ];
 
 
@@ -113,7 +114,7 @@
     let touchendX = 0
     
     function checkDirection() {
-        const balancer = 5;
+        const balancer = 7.5;
         if (touchstartX - touchendX > balancer ) changeLetter();
         if (touchstartX - touchendX < - balancer ) changeLetter();
         if (touchstartY - touchendY > balancer ) decreaseSize();
