@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hello, world!</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="" />
+</head>
+<body>
+    <div id=""options>
+        <label for="size">Device:</label>
+
+        <select name="size" id="size">
+            <!-- <option value="0">28in Screen</option>
+            <option value="1">iPhone 14</option> -->
+        </select>
+
+        <label for="distance">Distance (cm):</label>
+
+        <input name="distance" id="distance" value="600">
+        </input>
+    </div>
+    <div id="Viewport">
+        <h1 id="Letter">E</h1>
+    </div>
+    <div id="sizing">
+        <h3 id="sizingWriting">Size = 6/60</h3>
+    </div>
+</body>
+
+<script src="snellen.js"></script>
+<style>
+    @font-face {
+    font-family: "optotype";
+    src: url("Optician-Sans.woff") format("woff");
+    }
+
+    h1 {
+        font-family: optotype;
+    }
+    h3 {
+        font-family: optotype;
+        color: grey;
+    }
+    #sizing {
+        position: fixed;
+        bottom: 0;
+        width: 95vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10vh;
+    }
+    #Viewport {
+        height: 90vh;
+        width: 95vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+    }
+    label, select, input {
+        font-family: optotype;
+        height: 30px;
+        padding: 0px;
+        padding-left: 5px;
+        
+    }
+
+
+    select, input {
+        border: 1px solid black;
+    }
+</style>
+</html>
