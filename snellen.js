@@ -23,6 +23,7 @@
     var sizeSelect = document.getElementById('size');
     var scaleInput = document.getElementById('scale');
     var distanceInput = document.getElementById('distance');
+    var fixButton = document.getElementById('fixMyHeight');
     var currentHeightInput = document.getElementById("currentHeight");
     var letterE = document.getElementById("Letter");
     var sizingWritingE = document.getElementById("sizingWriting");
@@ -96,8 +97,17 @@
     document.addEventListener("keydown", (event) => {
         changeWithKey(event);
     });
+    fixButton.addEventListener("click", (event) => {
+        showHideFixHeight();
+    });
 
-
+    function showHideFixHeight(){
+        if(currentHeightInput.getPropertyValue(display) == "none"){
+            currentHeightInput.style.display="block"
+        }
+            
+        else{currentHeightInput.style.display="none"}
+    }    
     let touchstartX = 0
     let touchendX = 0
     
