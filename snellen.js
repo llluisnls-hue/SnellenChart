@@ -46,7 +46,7 @@
         height1cm = screenSize;
         heightShouldBeAt = tan5min * SnellenSizes[SnellenSize][1] * 100 * distance / 600; //in centimeters
         letterE.style.fontSize = height1cm * heightShouldBeAt + 'px';
-        sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0] + "(" + Math.round(heightShouldBeAt *10)/10 +"cm)";
+        sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0] + "  (" + Math.round(heightShouldBeAt *10)/10 +"cm)";
         saveDefaults();
     }
 
