@@ -63,7 +63,7 @@
     let touchendX = 0
     
     function checkDirection() {
-        const balancer = 100px;
+        const balancer = 100;
         if (touchstartX - touchendX > balancer ) alert("swiped left! start: " + touchstartX + " end: " + touchendX)
         if (touchstartX - touchendX < - balancer ) alert("swiped right! start: " + touchstartX + " end: " + touchendX)
     }
