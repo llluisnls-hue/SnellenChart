@@ -160,14 +160,14 @@
     function decreaseSize(){
         if (SnellenSizeDesired < lenSnellen - 1){
             SnellenSizeDesired += 1;
-            changeCSS(screenSize.value, distanceInput.value, SnellenSizeDesired);
+            changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
         }
     }
 
     function increaseSize(){
         if (SnellenSizeDesired > 0){
             SnellenSizeDesired -= 1;
-            changeCSS(screenSize.value, distanceInput.value, SnellenSizeDesired);
+            changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
         }
     }
 
