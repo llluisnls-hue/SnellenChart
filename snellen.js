@@ -79,7 +79,7 @@
     }
 
     sizeSelect.addEventListener("change", (event) => {
-        scaleInput.value = sizeSelect.value;
+        scaleInput.value = viewingWindow[sizeSelect.value][1];
         changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
     });
     scaleInput.addEventListener("change", (event) => {
