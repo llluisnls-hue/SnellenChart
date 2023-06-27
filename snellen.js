@@ -19,9 +19,9 @@
     ]
 
     const letterOptions = ["D","E","F","H","N","P","R","U","V","Z","O"];
-    var fontScale = 1.25 / 7 * 10 ;
 
     var sizeSelect = document.getElementById('size');
+    var scaleInput = document.getElementById('scale');
     var distanceInput = document.getElementById('distance');
     var letterE = document.getElementById("Letter");
     var sizingWritingE = document.getElementById("sizingWriting");
@@ -40,7 +40,7 @@
 
     function changeCSS(screenSize, distance, SnellenSize){
         console.log(screenSize, distance, SnellenSize);
-        height1cm = viewingWindow[parseInt(screenSize)][1] * fontScale;
+        height1cm = screenSize;
         heightShouldBeAt6m = tan5min * SnellenSizes[SnellenSize][1] * 100; //in centimeters
         letterE.style.fontSize = height1cm * heightShouldBeAt6m * distance / 600 + 'px';
         sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0];
@@ -74,13 +74,19 @@
     function saveDefaults(){
         setCookie("sizeSelectDef", sizeSelect.value, 365);
         setCookie("distanceInputDef", distanceInput.value, 365);
+        setCookie("scaleInputDef", scaleInput.value, 365);
     }
 
     sizeSelect.addEventListener("change", (event) => {
-        changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
+        scaleInput.value = sizeSelect.value;
+        changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
     });
+    scaleInput.addEventListener("change", (event) => {
+        changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
+    });
+    
     distanceInput.addEventListener("change", (event) => {
-        changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
+        changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
     });
 
     document.addEventListener("keydown", (event) => {
@@ -140,6 +146,7 @@
         distanceInputDef = getCookie("distanceInputDef",600);
         document.getElementById('size').value=sizeSelectDef;
         document.getElementById('distance').value=distanceInputDef;
+        document.getElementById('scale').value=scaleInputDef;
         changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
     }
     function changeLetter(){
@@ -152,14 +159,14 @@
     function decreaseSize(){
         if (SnellenSizeDesired < lenSnellen - 1){
             SnellenSizeDesired += 1;
-            changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
+            changeCSS(screenSize.value, distanceInput.value, SnellenSizeDesired);
         }
     }
 
     function increaseSize(){
         if (SnellenSizeDesired > 0){
             SnellenSizeDesired -= 1;
-            changeCSS(sizeSelect.value, distanceInput.value, SnellenSizeDesired);
+            changeCSS(screenSize.value, distanceInput.value, SnellenSizeDesired);
         }
     }
 
