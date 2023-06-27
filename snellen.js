@@ -102,7 +102,7 @@
     });
 
     function showHideFixHeight(){
-        if(currentHeightInput.getPropertyValue(display) == "none"){
+        if(currentHeightInput.getPropertyValue("display") == "none"){
             currentHeightInput.style.display="block"
         }
             
