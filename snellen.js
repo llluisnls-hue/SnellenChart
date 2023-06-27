@@ -44,6 +44,7 @@
         heightShouldBeAt6m = tan5min * SnellenSizes[SnellenSize][1] * 100; //in centimeters
         letterE.style.fontSize = height1cm * heightShouldBeAt6m * distance / 600 + 'px';
         sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0];
+        saveDefaults();
     }
 
     // basic cookie saving functions from: https://www.w3schools.com/js/js_cookies.asp
