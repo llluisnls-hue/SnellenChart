@@ -114,7 +114,7 @@
     let touchendX = 0
     
     function checkDirection() {
-        const balancer = 7.5;
+        const balancer = 12.5;
         if (touchstartX - touchendX > balancer ) changeLetter();
         if (touchstartX - touchendX < - balancer ) changeLetter();
         if (touchstartY - touchendY > balancer ) decreaseSize();
