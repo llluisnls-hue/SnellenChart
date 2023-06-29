@@ -1,2 +1,7 @@
 # SnellenChart
-Website form of Snellen
+Website form of Snellen chart
+
+
+## How to
+choose your device at the top of the screen, this will set the appropriate scale (number of pixels in 1cm)
+use arrow keys or swipe to change the size of the letters
