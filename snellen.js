@@ -160,7 +160,7 @@
     }
     function initialize(){
         sizeSelectDef = getCookie("sizeSelectDef",0);
-        distanceInputDef = getCookie("distanceInputDef",600);
+        distanceInputDef = getCookie("distanceInputDef",150);
         scaleInputDef = getCookie("scaleInputDef",viewingWindow[0][1]);
         document.getElementById('size').value=sizeSelectDef;
         document.getElementById('distance').value=distanceInputDef;
