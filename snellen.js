@@ -29,12 +29,14 @@
     var currentHeightInput = document.getElementById("currentHeight");
     var currentHeightInputDiv = document.getElementById("fixHeight");
     var letterE = document.getElementById("Letter");
+    var listOfVAsText = document.getElementById("listOfVAs");
     var sizingWritingE = document.getElementById("sizingWriting");
     var baselineHeight = 100;
     var currentLetter = 1;
     var lenSnellen = SnellenSizes.length;
     var heightShouldBeAt = 0;
     const balancer = 17.5;
+    let lastClick = 0;
     
     //calculate Snellen's
     // Standard vision able to recognise 1 optotype when subtends angle of 5 minutes of arc
@@ -195,6 +197,52 @@
         currentScale = scaleInput.value;
         scaleInput.value = Math.round( currentScale * heightShouldBeAt / currentHeight *10)/10; //to one decimal place
         changeCSS(scaleInput.value, distanceInput.value, SnellenSizeDesired);
+    }
+
+
+    // Save VA Values as follows:
+    // yyyy-mm-dd hh:mm  -  VA |
+    function saveVAHistory(){
+        var currrentDateTime = new Date();
+        var date = currrentDateTime.getFullYear()+'-'+(currrentDateTime.getMonth()+1)+'-'+currrentDateTime.getDate();
+        var time = currrentDateTime.getHours() + ":" + currrentDateTime.getMinutes();
+        var currentSaveValue = date + " " + time + "  -  " + SnellenSizes[SnellenSize][0] + "|";
+        var currentVAList = getCookie(VAHistory, "");
+        setCookie(VAHistory,currentVAList + currentSaveValue, 365);
+    }
+
+    function updateVAHistory(){
+        var VAText = getCookie(VAHistory, "");
+        if (VAText.length == 0){
+            listOfVAsText.innerHTML = "";
+        } else {
+            listOfVAsText.innerHTML = "";
+            var VAList = VAText.split("|");
+            for (item in VAList){
+                	let p = document.createElement('h5');
+	                p.textContent = item;
+                    listOfVAsText.appendChild(p);
+            }
+        }
+        
+    }
+
+    sizingWritingE.addEventListener('touchstart', function(e) {
+      e.preventDefault(); // to disable browser default zoom on double tap
+      let date = new Date();
+      let time = date.getTime();
+      const time_between_taps = 200; // 200ms
+      if (time - lastClick < time_between_taps) {
+        updateVAHistory();
+        openModal(SaveList);
+      } else {
+          saveVAHistory();
+      }
+      lastClick = time;
+    })
+    function clearVAHistory(){
+        listOfVAsText.innerHTML = "";
+        setCookie(VAHistory,"", 365);
     }
     createSelection();
     initialize();
