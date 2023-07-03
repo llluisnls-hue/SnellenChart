@@ -34,6 +34,7 @@
     var currentLetter = 1;
     var lenSnellen = SnellenSizes.length;
     var heightShouldBeAt = 0;
+    const balancer = 17.5;
     
     //calculate Snellen's
     // Standard vision able to recognise 1 optotype when subtends angle of 5 minutes of arc
@@ -115,7 +116,7 @@
     let touchendX = 0
     
     function checkDirection() {
-        const balancer = 12.5;
+        
         if (touchstartX - touchendX > balancer ) changeLetter();
         if (touchstartX - touchendX < - balancer ) changeLetter();
         if (touchstartY - touchendY > balancer ) decreaseSize();
