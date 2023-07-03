@@ -42,6 +42,21 @@
         <h5>add more options here: <a href="https://forms.gle/AJefepVoQmpu7SSy8">GForm</a></h5>
       <br>
       <h5>Swipe/Use Arrows</h5>
+      <button onclick="openModal('HelpModal')">Help</button>
+    </div>
+
+
+
+      <div id="HelpModal" class="jw-modal">
+        <div class="jw-modal-body">
+            <h1>This is a web-browser Snellen Chart</h1>
+            <h5>Swipe left/right or use left/right keyboard arrows to change letters </h5>
+            <h5>Swipe up/down or use up/down keyboard arrows to make letters smaller or larger </h5>
+            <h5>Double click "fix" and type in the actual size of the letter on the screen (any letter at any size), 
+              the system will then correct the scale to work for your phone</h5>
+            <h5>Type the distance you wouant to hold the screen at.</h5>
+            <button onclick="closeModal()">Close</button>
+        </div>
     </div>
 </body>
 
@@ -97,6 +112,10 @@
 
   #fixHeight {
     display: none;
+  }
+  button {
+      font-family: optotype;
+      color: grey;
   }
 </style>
 </html>
