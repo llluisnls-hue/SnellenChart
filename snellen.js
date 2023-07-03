@@ -221,7 +221,7 @@
             var VAList = VAText.split("|");
             for (item in VAList){
                 	let p = document.createElement('h5');
-	                p.textContent = item;
+	                p.textContent = VAList[item];
                     listOfVAsText.appendChild(p);
             }
         }
