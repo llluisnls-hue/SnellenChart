@@ -227,24 +227,15 @@
         }
         
     }
-
-    saveVATarget.addEventListener('touchstart', function(e) {
-      e.preventDefault(); // to disable browser default zoom on double tap
-      let date = new Date();
-      let time = date.getTime();
-      const time_between_taps = 200; // 200ms
-      if (time - lastClick < time_between_taps) {
-        updateVAHistory();
-        openModal(SaveList);
-      } else {
-          saveVAHistory();
-      }
-      lastClick = time;
-    })
+    function viewVAHistory(){
+	updateVAHistory();
+	openModal("SaveList");
+    }
     function clearVAHistory(){
         listOfVAsText.innerHTML = "";
         setCookie("VAHistory","", 365);
     }
+
     createSelection();
     initialize();
 
