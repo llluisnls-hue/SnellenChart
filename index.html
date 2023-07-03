@@ -50,7 +50,7 @@
 
 
 
-      <div id="HelpModal" class="jw-modal">
+    <div id="HelpModal" class="jw-modal">
         <div class="jw-modal-body">
             <h1>Web-browser Snellen Chart</h1>
             <h5>Swipe left/right or use left/right keyboard arrows to change letters </h5>
@@ -60,9 +60,20 @@
             <h5>To calibrate the scale: Double click "fix" and type in the actual size of the letter on the screen (in cm) 
               the system will then correctly size the chart for your device</h5>
             <h5>After calibrating, consider sending the correct scale for your device <a href="https://forms.gle/AJefepVoQmpu7SSy8">here</a> so others can use it</h5>
+            <h5>Tap the score eg. "6/60" to save/
             <h5>Your defaults will be saved to your cookies for 1 year</h5>
             <h5><a href="https://github.com/coote-andrew/SnellenChart">Github Here</a></h5>
             <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    <div id="SaveList" class="jw-modal">
+        <div class="jw-modal-body">
+            <h1>List of saved VAs</h1>
+            <button onclick="clearVA()">Clear List</button>
+            <button onclick="closeModal()">Close</button>
+            <div id="listOfVAs">
+        
+            </div>           
         </div>
     </div>
 </body>
