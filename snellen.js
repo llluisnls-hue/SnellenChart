@@ -26,6 +26,7 @@
     var scaleInput = document.getElementById('scale');
     var distanceInput = document.getElementById('distance');
     var fixButton = document.getElementById('fixMyHeight');
+    var saveVATarget = document.getElementById('saveVATarget');
     var currentHeightInput = document.getElementById("currentHeight");
     var currentHeightInputDiv = document.getElementById("fixHeight");
     var letterE = document.getElementById("Letter");
@@ -227,7 +228,7 @@
         
     }
 
-    sizingWritingE.addEventListener('touchstart', function(e) {
+    saveVATarget.addEventListener('touchstart', function(e) {
       e.preventDefault(); // to disable browser default zoom on double tap
       let date = new Date();
       let time = date.getTime();
