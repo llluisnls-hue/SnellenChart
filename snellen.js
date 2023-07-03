@@ -207,12 +207,12 @@
         var date = currrentDateTime.getFullYear()+'-'+(currrentDateTime.getMonth()+1)+'-'+currrentDateTime.getDate();
         var time = currrentDateTime.getHours() + ":" + currrentDateTime.getMinutes();
         var currentSaveValue = date + " " + time + "  -  " + SnellenSizes[SnellenSizeDesired][0] + "|";
-        var currentVAList = getCookie(VAHistory, "");
-        setCookie(VAHistory,currentVAList + currentSaveValue, 365);
+        var currentVAList = getCookie("VAHistory", "");
+        setCookie("VAHistory",currentVAList + currentSaveValue, 365);
     }
 
     function updateVAHistory(){
-        var VAText = getCookie(VAHistory, "");
+        var VAText = getCookie("VAHistory", "");
         if (VAText.length == 0){
             listOfVAsText.innerHTML = "";
         } else {
@@ -242,7 +242,7 @@
     })
     function clearVAHistory(){
         listOfVAsText.innerHTML = "";
-        setCookie(VAHistory,"", 365);
+        setCookie("VAHistory","", 365);
     }
     createSelection();
     initialize();
