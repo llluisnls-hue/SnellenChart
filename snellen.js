@@ -206,7 +206,7 @@
         var currrentDateTime = new Date();
         var date = currrentDateTime.getFullYear()+'-'+(currrentDateTime.getMonth()+1)+'-'+currrentDateTime.getDate();
         var time = currrentDateTime.getHours() + ":" + currrentDateTime.getMinutes();
-        var currentSaveValue = date + " " + time + "  -  " + SnellenSizes[SnellenSize][0] + "|";
+        var currentSaveValue = date + " " + time + "  -  " + SnellenSizes[SnellenSizeDesired][0] + "|";
         var currentVAList = getCookie(VAHistory, "");
         setCookie(VAHistory,currentVAList + currentSaveValue, 365);
     }
