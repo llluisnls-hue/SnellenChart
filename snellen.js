@@ -16,6 +16,7 @@
         ["6/18", 18],
         ["6/12", 12],
         ["6/9", 9],
+	["6/7.7", 7.5],
         ["6/6", 6],
         ["6/5", 5],
         ["6/4", 4]
@@ -52,7 +53,7 @@
     function changeCSS(screenSize, distance, SnellenSize){
         console.log(screenSize, distance, SnellenSize);
         height1cm = screenSize;
-        heightShouldBeAt = tan5min * SnellenSizes[SnellenSize][1] * 100 * distance / 600; //in centimeters
+        heightShouldBeAt = tan5min * SnellenSizes[SnellenSize][1] * 100.0 * distance / 600; //in centimeters
         letterE.style.fontSize = height1cm * heightShouldBeAt + 'px';
         sizingWritingE.innerHTML = "Size = " + SnellenSizes[SnellenSize][0] + "  (" + Math.round(heightShouldBeAt *10)/10 +"cm)";
         saveDefaults();
