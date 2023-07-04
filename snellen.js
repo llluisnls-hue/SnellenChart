@@ -1,7 +1,8 @@
     //here is where we will store the height of 1cm
     var viewingWindow = [
         // display name , number of pixels in 1cm
-        ["28' screen", 79.9],
+        ["Chrome - most screens", 79.9],
+        ["Edge",69.7],
         ["iPhone 14", 119.7 ],
         ["iPad pro 12.9",104.1],
     ];
