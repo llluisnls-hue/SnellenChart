@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Snellen (líneas) – logMAR 0.1 steps</title>
+<style>
+  :root { --fg:#111; --bg:#fff; --acc:#0b6; }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
+  header{padding:12px 16px;border-bottom:1px solid #ddd;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  header .grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  header label{font-size:13px;opacity:.9}
+  header input[type="number"]{width:6rem;padding:6px}
+  header select{padding:6px}
+  main{padding:12px 10px;max-width:1200px;margin:0 auto}
+  #chart{display:grid;gap:14px;align-content:start;margin-top:10px}
+  .row{display:flex;gap:1ch;justify-content:center;align-items:flex-end;line-height:1}
+  .cell{display:inline-block; font-weight:700; user-select:none; -webkit-user-select:none; }
+  .tumble{display:inline-block;transform-origin:50% 50%}
+  .label{font-size:12px; text-align:center; margin-top:4px; opacity:.75}
+  .row-wrap{display:flex; flex-direction:column; align-items:center}
+  .barWrap{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .bar{height:12px;background:#ccc;border:1px solid #999;box-shadow: inset 0 0 0 2px #eee}
+  .small{font-size:12px;opacity:.8}
+  .btn{padding:6px 10px;border:1px solid #999;background:#f7f7f7;border-radius:6px;cursor:pointer}
+  .btn:active{transform:translateY(1px)}
+  .muted{opacity:.7}
+  .sticky{position:sticky; top:0; background:var(--bg); z-index:5}
+</style>
+</head>
+<body>
+  <header class="sticky">
+    <div class="grp">
+      <label>Distancia (m):
+        <input id="distanceM" type="number" min="0.5" max="10" step="0.1" value="3.0">
+      </label>
+    </div>
+    <div class="grp">
+      <label>Juego de signos:
+        <select id="alphabet">
+          <option value="sloan">Sloan (CDHKNORSVZ)</option>
+          <option value="tumbleE">Tumbling E</option>
+        </select>
+      </label>
+    </div>
+    <div class="grp">
+      <label>Filas:
+        <select id="rowsPreset">
+          <option value="10" selected>10 (1-2-3-4-5-5-5-5-5-5)</option>
+          <option value="8">8</option>
+          <option value="12">12</option>
+        </select>
+      </label>
+    </div>
+    <div class="grp">
+      <button id="shuffle" class="btn">↻ Nuevas letras</button>
+    </div>
+    <div class="grp">
+      <span class="muted small">logMAR base = 1.0, paso −0.1/fila</span>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h3>Calibración (obligatoria la primera vez)</h3>
+      <div class="barWrap">
+        <div id="calBar" class="bar" style="width:200px"></div>
+        <input id="barRange" type="range" min="50" max="600" step="1" value="200">
+        <div>
+          <div class="small">Ajusta la barra para que mida <b>50 mm</b> con tu regla física.</div>
+          <div class="small">Ancho actual: <span id="barPx">200</span> px → <span id="pxPerMM">4.00</span> px/mm</div>
+        </div>
+        <button id="lockCal" class="btn">✔ Guardar calibración</button>
+        <span id="calStatus" class="small muted"></span>
+      </div>
+    </section>
+
+    <section id="chart"></section>
+  </main>
+
+<script>
+/* ========= Utilidades ========= */
+const TAU = Math.PI*2;
+const DEG = Math.PI/180;
+const SLOAN = ["C","D","H","K","N","O","R","S","V","Z"];
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function randEAngle(){ return [0,90,180,270][Math.floor(Math.random()*4)]; }
+
+// Persistencia simple calibración
+const store = {
+  get pxPerMM(){ return parseFloat(localStorage.getItem('pxPerMM')||"") || null; },
+  set pxPerMM(v){ localStorage.setItem('pxPerMM', String(v)); }
+};
+
+// DOM
+const distanceM = document.getElementById('distanceM');
+const alphabetSel = document.getElementById('alphabet');
+const rowsPreset = document.getElementById('rowsPreset');
+const chart = document.getElementById('chart');
+const bar = document.getElementById('calBar');
+const barRange = document.getElementById('barRange');
+const barPx = document.getElementById('barPx');
+const pxPerMMEl = document.getElementById('pxPerMM');
+const lockCal = document.getElementById('lockCal');
+const calStatus = document.getElementById('calStatus');
+
+// Inicializar barra de calibración
+function updateBarUI(px){
+  bar.style.width = px + "px";
+  barPx.textContent = px;
+  const ppm = (px/50);
+  pxPerMMEl.textContent = ppm.toFixed(2);
+}
+barRange.addEventListener('input', e => updateBarUI(parseInt(e.target.value,10)));
+updateBarUI(parseInt(barRange.value,10));
+
+lockCal.addEventListener('click', () => {
+  const ppm = parseFloat(pxPerMMEl.textContent);
+  store.pxPerMM = ppm;
+  calStatus.textContent = `Guardado (${ppm.toFixed(2)} px/mm)`;
+  render();
+});
+
+// Si había calibración, mostrar estado
+if(store.pxPerMM){
+  pxPerMMEl.textContent = store.pxPerMM.toFixed(2);
+  const px = Math.round(store.pxPerMM*50);
+  barRange.value = px;
+  updateBarUI(px);
+  calStatus.textContent = `Usando calibración guardada`;
+}
+
+// Config de filas (letras por fila)
+function rowsForPreset(n){
+  if(n===8)  return [1,2,3,4,5,5,5,5];
+  if(n===12) return [1,2,3,4,5,5,5,5,5,5,5,5];
+  return [1,2,3,4,5,5,5,5,5,5]; // 10
+}
+
+/* ======= Cálculo de tamaño (logMAR) =======
+   MAR = 10^logMAR (en minutos de arco)
+   Altura de la letra subtende 5 * MAR (min de arco).
+   H(mm) = 2 * D(mm) * tan( (5*MAR/60)° / 2 )  ≈ D * (5*MAR/3438) * 2   (usamos tan exacta)
+*/
+function letterHeightMM(distance_m, logMAR){
+  const Dmm = distance_m*1000;
+  const MAR = Math.pow(10, logMAR); // minutos de arco
+  const angleDeg = 5*MAR/60;        // grados
+  const angleRad = angleDeg*DEG;
+  const H = 2 * Dmm * Math.tan(angleRad/2);
+  return H;
+}
+
+// Equivalente Snellen (aprox, a 6 m): Snellen = 6 / (10^-logMAR)
+// Para 3 m, el "denominador" se escala linealmente con la distancia.
+function snellenAt(distance_m, logMAR){
+  const denomAt6m = 6 / Math.pow(10,-logMAR);
+  const denom = denomAt6m * (distance_m/6.0);
+  return ` ${distance_m.toFixed(1)}m: ${distance_m.toFixed(0)}/${Math.round(denom)}`;
+}
+
+function render(){
+  const ppm = store.pxPerMM;
+  chart.innerHTML = '';
+  if(!ppm){
+    const p = document.createElement('p');
+    p.textContent = '👉 Primero calibra la barra a 50 mm y pulsa "Guardar calibración".';
+    chart.appendChild(p);
+    return;
+  }
+  const Dm = parseFloat(distanceM.value||'3') || 3.0;
+  const mode = alphabetSel.value;
+  const rowsN = parseInt(rowsPreset.value,10);
+  const counts = rowsForPreset(rowsN);
+
+  // Base logMAR = 1.0, paso -0.1 por fila
+  const baseLogMAR = 1.0;
+
+  counts.forEach((cnt, idx) => {
+    const logMAR = baseLogMAR - 0.1*idx;
+    const Hmm = letterHeightMM(Dm, logMAR);
+    const Hpx = Hmm * ppm;
+
+    const rowWrap = document.createElement('div');
+    rowWrap.className = 'row-wrap';
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    row.style.gap = Math.round(Hpx) + 'px'; // crowding ≈ 1× altura
+
+    for(let i=0;i<cnt;i++){
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+
+      if(mode==='sloan'){
+        cell.textContent = rand(SLOAN);
+        cell.style.fontSize = `${Hpx}px`;
+      } else {
+        // Tumbling E: rotaciones de E
+        const span = document.createElement('span');
+        span.className = 'tumble';
+        span.textContent = 'E';
+        span.style.fontSize = `${Hpx}px`;
+        span.style.transform = `rotate(${randEAngle()}deg)`;
+        cell.appendChild(span);
+      }
+      row.appendChild(cell);
+    }
+
+    const lbl = document.createElement('div');
+    lbl.className = 'label';
+    lbl.textContent = `logMAR ${logMAR.toFixed(1)} •${snellenAt(Dm, logMAR)}`;
+
+    rowWrap.appendChild(row);
+    rowWrap.appendChild(lbl);
+    chart.appendChild(rowWrap);
+  });
+}
+
+// Eventos
+['input','change'].forEach(evt=>{
+  distanceM.addEventListener(evt, render);
+  alphabetSel.addEventListener(evt, render);
+  rowsPreset.addEventListener(evt, render);
+});
+
+document.getElementById('shuffle').addEventListener('click', render);
+
+// Primer render
+render();
+</script>
+</body>
+</html>
+
+Obtener Outlook para iOS
+De: luis.leon@redoftalmomedic.pe <luis.leon@redoftalmomedic.pe>
+Enviado: Thursday, October 2, 2025 11:04:52 AM
+Para: Luis Nls <luis_nls@hotmail.com>
+Asunto: OPTO
+ 
+https://coote-andrew.github.io/SnellenChart/
