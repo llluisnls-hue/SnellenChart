@@ -7,38 +7,53 @@
 <style>
   :root { --fg:#111; --bg:#fff; --mut:#777; }
   html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-  /* Barra superior */
-  header{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid #e5e5e5;background:var(--bg)}
-  header .grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-  header label{font-size:13px;opacity:.9}
-  header input[type="number"]{width:6.5rem;padding:6px}
+
+  /* Barra superior fija */
+  header{
+    position:sticky; top:0; z-index:5;
+    display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    padding:10px 12px; border-bottom:1px solid #e5e5e5; background:var(--bg)
+  }
+  header .grp{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+  header label{font-size:13px; opacity:.9}
+  header input[type="number"]{width:6.5rem; padding:6px}
   header select{padding:6px}
-  .btn{padding:6px 10px;border:1px solid #999;background:#f7f7f7;border-radius:6px;cursor:pointer}
+  .btn{padding:6px 10px; border:1px solid #999; background:#f7f7f7; border-radius:6px; cursor:pointer}
   .btn:active{transform:translateY(1px)}
-  .small{font-size:12px;color:var(--mut)}
-  /* Área principal centrada y con espacio desde el header */
+  .small{font-size:12px; color:var(--mut)}
+
+  /* Estructura principal: centro (carta) + pie (calibración) */
   main{
     min-height: calc(100vh - 64px);
-    padding: 14px 10px 40px;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: flex-start;
+    display:flex; flex-direction:column;
   }
-  .topSpacer{height:6vh}
-  /* Calibración (una sola vez arriba) */
-  .barWrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
-  .bar{height:12px;background:#ccc;border:1px solid #999;box-shadow:inset 0 0 0 2px #eee}
-  /* Carta centrada */
+
+  /* Contenedor que centra las letras en el área disponible */
+  .chartWrapper{
+    flex:1;                     /* ocupa todo el espacio libre */
+    display:flex;
+    align-items:center;         /* centra verticalmente la carta */
+    justify-content:center;     /* centra horizontalmente la carta */
+    padding: 18px 10px;
+  }
+
+  /* Carta: grid centrado */
   #chart{
     width: 100%; max-width: 1200px;
     display:grid; gap:18px;
-    align-content:start; justify-items:center;
-    margin-top: 2vh;
+    align-content:start;        /* distribución interna del grid */
+    justify-items:center;       /* cada fila centrada */
   }
-  .rowWrap{display:flex;flex-direction:column;align-items:center}
-  .row{display:flex;gap:1ch;justify-content:center;align-items:flex-end;line-height:1}
-  .cell{display:inline-block;font-weight:700;user-select:none;-webkit-user-select:none}
-  .tumble{display:inline-block;transform-origin:50% 50%}
-  .label{font-size:12px;text-align:center;margin-top:4px;color:var(--mut)}
+  .rowWrap{display:flex; flex-direction:column; align-items:center}
+  .row{display:flex; gap:1ch; justify-content:center; align-items:flex-end; line-height:1}
+  .cell{display:inline-block; font-weight:700; user-select:none; -webkit-user-select:none}
+  .tumble{display:inline-block; transform-origin:50% 50%}
+  .label{font-size:12px; text-align:center; margin-top:4px; color:var(--mut)}
+
+  /* Calibración al pie (una sola) */
+  .calSection{padding: 8px 10px 16px; display:flex; flex-direction:column; align-items:center}
+  .barWrap{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:6px}
+  .bar{height:12px; background:#ccc; border:1px solid #999; box-shadow:inset 0 0 0 2px #eee}
 </style>
 </head>
 <body>
@@ -60,65 +75,49 @@
   </div>
 
   <div class="grp">
-    <label>Filas:
-      <select id="rowsPreset" title="Cuántas filas (desde 20/400 hacia 20/20)">
-        <option value="9" selected>9 (20/400 → 20/20)</option>
-        <option value="8">8</option>
-        <option value="7">7</option>
-        <option value="6">6</option>
-        <option value="5">5</option>
-      </select>
-    </label>
-  </div>
-
-  <div class="grp">
     <label>Vista:
-      <select id="viewMode">
+      <select id="viewMode" title="Mostrar todas o una fila">
         <option value="all" selected>Todas las filas</option>
         <option value="one">Una fila</option>
       </select>
     </label>
-    <button id="prevRow" class="btn">⟵ Anterior</button>
-    <button id="nextRow" class="btn">Siguiente ⟶</button>
+    <button id="prevRow" class="btn" title="Fila anterior (↑)">⟵ Anterior</button>
+    <button id="nextRow" class="btn" title="Fila siguiente (↓)">Siguiente ⟶</button>
     <span id="rowInfo" class="small"></span>
   </div>
 
   <div class="grp">
-    <button id="shuffle" class="btn" title="Generar nuevas letras/rotaciones">↻ Nuevas letras</button>
-  </div>
-
-  <div class="grp">
-    <span class="small">Secuencia: 20/400, 200, 100, 70, 50, 40, 30, 25, 20 • Patrón: 1,2,3,4,5 y luego 6 • ↑↓ tamaño • ←→ nuevas letras</span>
+    <button id="shuffle" class="btn" title="Nuevas letras (←/→)">↻ Nuevas letras</button>
   </div>
 </header>
 
 <main>
-  <div class="topSpacer"></div>
+  <!-- Zona central: letras SIEMPRE centradas -->
+  <div class="chartWrapper">
+    <section id="chart" aria-label="Carta Snellen"></section>
+  </div>
 
-  <!-- Calibración (solo arriba, nada abajo) -->
-  <section aria-label="Calibración">
+  <!-- Calibración abajo -->
+  <section class="calSection" aria-label="Calibración">
     <h3 class="small" style="margin:0 0 6px">Calibración (obligatoria la primera vez)</h3>
     <div class="barWrap">
       <div id="calBar" class="bar" style="width:200px"></div>
       <input id="barRange" type="range" min="50" max="600" step="1" value="200">
       <div>
-        <div class="small">Ajusta la barra para que mida <b>50 mm</b> con tu regla.</div>
+        <div class="small">Ajusta la barra para que mida <b>50 mm</b>.</div>
         <div class="small">Ancho actual: <span id="barPx">200</span> px → <span id="pxPerMM">4.00</span> px/mm</div>
       </div>
       <button id="lockCal" class="btn">✔ Guardar</button>
       <span id="calStatus" class="small"></span>
     </div>
   </section>
-
-  <!-- Carta -->
-  <section id="chart" aria-label="Carta Snellen"></section>
 </main>
 
 <script>
 /* ========= Utilidades ========= */
 const DEG = Math.PI/180;
 const SLOAN = ["C","D","H","K","N","O","R","S","V","Z"];
-const rand = arr => arr[Math.floor(Math.random()*arr.length)];
+const rand  = arr => arr[Math.floor(Math.random()*arr.length)];
 const randE = () => [0,90,180,270][Math.floor(Math.random()*4)];
 
 const store = {
@@ -129,7 +128,6 @@ const store = {
 /* ========= DOM ========= */
 const distanceM = document.getElementById('distanceM');
 const alphabetSel = document.getElementById('alphabet');
-const rowsPreset = document.getElementById('rowsPreset');
 const viewMode = document.getElementById('viewMode');
 const prevRow = document.getElementById('prevRow');
 const nextRow = document.getElementById('nextRow');
@@ -168,12 +166,12 @@ if(store.pxPerMM){
   calStatus.textContent = `Usando calibración guardada`;
 }
 
-/* ========= Secuencia Snellen pedida ========= */
+/* ========= Secuencia Snellen ========= */
 const SNELLEN_SEQ = [400,200,100,70,50,40,30,25,20]; // 9 filas
 const snellenDenoms = n => SNELLEN_SEQ.slice(0, n);
 const logmarFromDen = den => Math.log10(den/20);
 
-// Patrón de # de letras por fila: 1,2,3,4,5 y luego 6
+// Patrón de letras por fila: 1,2,3,4,5 y luego 6
 function countsFor(n){
   const out = [];
   for(let i=0;i<n;i++){
@@ -190,7 +188,7 @@ function countsFor(n){
 /* ========= Conversión de tamaño ========= */
 function letterHeightMM(distance_m, logMAR){
   const Dmm = distance_m*1000;
-  const MAR = Math.pow(10, logMAR);    // minutos de arco
+  const MAR = Math.pow(10, logMAR);    // min de arco
   const angleDeg = 5*MAR/60;           // altura subtende 5*MAR
   const angleRad = angleDeg*DEG;
   return 2 * Dmm * Math.tan(angleRad/2);
@@ -200,17 +198,17 @@ function snellen20ftFromLogMAR(logMAR){
   return `20/${Math.round(denom)}`;
 }
 
-/* ========= Letras fijas hasta "Nuevas letras" ========= */
+/* ========= Letras fijas ========= */
 let lettersCache = [];
 let rotCache = [];
 let cacheKey = '';
 let cacheMode = 'sloan';
 
 function generateLetters(counts, mode, logsKey){
-  cacheKey = counts.join(',') + '|' + logsKey;
+  cacheKey  = counts.join(',') + '|' + logsKey;
   cacheMode = mode;
   lettersCache = counts.map(cnt => Array.from({length: cnt}, _ => mode==='sloan' ? rand(SLOAN) : 'E'));
-  rotCache = counts.map(cnt => Array.from({length: cnt}, _ => randE()));
+  rotCache     = counts.map(cnt => Array.from({length: cnt}, _ => randE()));
 }
 
 /* ========= Render ========= */
@@ -228,17 +226,18 @@ function render(regenerate){
   }
 
   const Dm = parseFloat(distanceM.value||'3') || 3.0;
-  const nRows = parseInt(rowsPreset.value,10);
+  const nRows = SNELLEN_SEQ.length; // 9 filas fijas en secuencia completa
   const denoms = snellenDenoms(nRows);
-  const logs = denoms.map(logmarFromDen);
+  const logs   = denoms.map(logmarFromDen);
   const counts = countsFor(nRows);
-  const mode = alphabetSel.value;
+  const mode   = alphabetSel.value;
 
   const logsKey = logs.map(x=>x.toFixed(4)).join(',');
   if (regenerate || cacheKey !== counts.join(',')+'|'+logsKey || cacheMode !== mode) {
     generateLetters(counts, mode, logsKey);
   }
 
+  // Info y modo una fila
   if(viewMode.value === 'one'){
     currentRow = clamp(currentRow, 0, counts.length-1);
     rowInfo.textContent = `Fila ${currentRow+1} / ${counts.length}`;
@@ -288,19 +287,14 @@ function render(regenerate){
 }
 
 /* ========= Eventos GUI ========= */
-// No regeneran: distancia y vista
 distanceM.addEventListener('input', ()=>render(false));
-distanceM.addEventListener('change', ()=>render(false));
-viewMode.addEventListener('change', ()=>render(false));
-// Sí regeneran: número de filas, alfabeto, botón nuevas letras
-rowsPreset.addEventListener('change', ()=>render(true));
-alphabetSel.addEventListener('change', ()=>render(true));
+distanceM.addEventListener('change',()=>render(false));
+alphabetSel.addEventListener('change',()=>render(true));
 document.getElementById('shuffle').addEventListener('click', ()=>render(true));
-// Navegación botones
-document.getElementById('prevRow').addEventListener('click', ()=>{ currentRow = clamp(currentRow-1,0,999); render(false); });
-document.getElementById('nextRow').addEventListener('click', ()=>{ currentRow = clamp(currentRow+1,0,999); render(false); });
+prevRow.addEventListener('click', ()=>{ currentRow = clamp(currentRow-1,0,999); render(false); });
+nextRow.addEventListener('click', ()=>{ currentRow = clamp(currentRow+1,0,999); render(false); });
 
-/* ========= Control con teclado ========= */
+/* ========= Teclado ========= */
 document.addEventListener('keydown', (e) => {
   // ← / → : nuevas letras (en cualquier vista)
   if(e.key === "ArrowLeft" || e.key === "ArrowRight"){
@@ -319,7 +313,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Primer render (genera las letras una vez)
+// primer render
 render(true);
 </script>
 </body>
